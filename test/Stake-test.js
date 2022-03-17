@@ -2,7 +2,7 @@ const { expect } = require("chai");
 const { ethers } = require("hardhat");
 const Assert = require('assert');
 const { BigNumber, Contract } = require("ethers");
-const { expectRevert } = require('@openzeppelin/test-helpers');
+const { expectRevert, expectEvent } = require('@openzeppelin/test-helpers');
 
 describe("Test Contract StakeNft.sol", function () {
 
@@ -175,7 +175,6 @@ describe("Test Contract StakeNft.sol", function () {
       /* ========== TEST FUNCTION withdrawAll ========== */
       it("Function withdrawAll: Check balance after withdrawAll", async function(){
         await stakenft.connect(user1).withdrawAll();
-        console.log(await stakenft.connect(user1).getBalance());
         Assert.equal(
           await stakenft.connect(user1).getBalance(),
           ethers.utils.formatUnits(0,0),
@@ -183,8 +182,36 @@ describe("Test Contract StakeNft.sol", function () {
         )
       });
       /* ========== TEST FUNCTION getReward ========== */
-      it("Function getReward", async function(){
-        await expectRevert(stakenft.connect(owner).getReward(),"You must wait a month before withdrawing your winnings");
+      it("Function getReward: Check if a month ago before get reward", async function(){
+        await expectRevert(stakenft.connect(owner).getReward(),
+        "You must wait a month before withdrawing your winnings");
+      });
+      it("Function getReward: Check if token is Send", async function() {
+        await network.provider.send("evm_increaseTime", [2419200]);
+        await stakenft.connect(owner).getReward();
+        expect(await stakenft.balanceOf(owner.address) > 0).to.equal(true);
+      });
+      it("Function getReward: Check Event", async function() {
+        await network.provider.send("evm_increaseTime", [2419200]);
+        await stakenft.connect(owner).getReward();
+        const eventFilter = stakenft.filters.rewardPaid();
+        const event = await stakenft.queryFilter(eventFilter);
+        const eventData = event[0].args;
+        Assert.equal(
+          eventData._userPaid,
+          owner.address,
+          'Should be Owner address'
+        );
+        Assert.equal(
+          eventData._rewardPaid,
+          ethers.utils.formatUnits(60480183,0),
+          'Should be 60480183 reward'
+        );
+        Assert.equal(
+          eventData._stakingTime,
+          ethers.utils.formatUnits(0,0),
+          'The stakingTime Should be 0'
+        );
       });
   });
 });

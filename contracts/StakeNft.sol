@@ -105,13 +105,14 @@ contract StakeNft is IERC721Receiver, ReentrancyGuard{
         emit WithdrawAll(initialTimeOfEntry[msg.sender], _totalSupply);
     }
 
+    
     function getReward() public nonReentrant updateReward(msg.sender) waitMonth(msg.sender){
         uint256 reward = rewards[msg.sender];
         require(reward >= 0,"You have no reward");
         rewards[msg.sender] = 0;
         deployedToken.transfer(msg.sender, reward);
         initialTimeOfEntry[msg.sender] = 0;
-        emit RewardPaid(msg.sender, reward, initialTimeOfEntry[msg.sender]);
+        emit rewardPaid(msg.sender, reward, initialTimeOfEntry[msg.sender]);
     }
 
     /* ========== VIEWS ========== */
@@ -163,5 +164,5 @@ contract StakeNft is IERC721Receiver, ReentrancyGuard{
     event Withdraw(address _ownerOfItem,uint256 _numberNft, uint _stakingTime, uint __totalSupply);
     event WithdrawByTokenId(address _ownerOfItem ,uint256 _tokenId, uint _stakingTime, uint __totalSupply);
     event WithdrawAll(uint _stakingTime, uint __totalSupply);
-    event RewardPaid(address _userPaid, uint256 rewardPaid, uint _stakingTime);
+    event rewardPaid(address _userPaid, uint256 _rewardPaid, uint _stakingTime);
 }
