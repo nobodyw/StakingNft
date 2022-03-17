@@ -1,15 +1,31 @@
-# Basic Sample Hardhat Project
+# *Staking Nft*
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts.
+*This project is a suite of 3 smart contracts that allows you to create an ERC721 collection that you can stake on a contract of at least 1 month to receive ERC20 as a reward. (You can withdraw your ERC721 whenever you want)*
 
-Try running some of the following tasks:
+# *Installation*
+
+This project use Hardhat and Ethers.js
 
 ```shell
-npx hardhat accounts
-npx hardhat compile
-npx hardhat clean
-npx hardhat test
-npx hardhat node
-node scripts/sample-script.js
-npx hardhat help
+npm install
 ```
+
+```shell
+npx hardhat compile
+```
+
+```shell
+npx hardhat test
+```
+
+# *Test contract*
+
+There are 2 test files,`DeployTokens-test.js` allows you to test the deployment of contracts
+and `Stake-test.js` tests the functionalities of the staking contract
+
+
+
+
+
+
+
