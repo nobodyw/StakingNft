@@ -40,8 +40,8 @@ contract StakeNft is IERC721Receiver, ReentrancyGuard{
     /* ========== FUNCTIONS SET VALUE ========== */
 
     /**
-     * @dev Add an ERC721 in the contract via tokenID, save timestamp of user.
-     * @param _tokenId this is the identifier of the ERC721
+     * @dev Add an ERC721 in the contract via tokenID, Init timestamp of user.
+     * @param _tokenId is the identifier of the ERC721
      */
     function stake(uint256 _tokenId) external updateReward(msg.sender) nonReentrant{
         _totalSupply = _totalSupply + 1;
@@ -56,7 +56,7 @@ contract StakeNft is IERC721Receiver, ReentrancyGuard{
 
     /**
      * @dev Allows you to withdraw an ERC721 from the contract, by passing the number of the nft that you have deposited
-     * @param _numberNft _numberNft is the order number in which you filed your NFT
+     * @param _numberNft is the number in which you filed your NFT (this is indexing against an array)
      */
     function withdraw(uint256 _numberNft) public updateReward(msg.sender) nonReentrant{
         _numberNft = _numberNft -1;
@@ -73,7 +73,7 @@ contract StakeNft is IERC721Receiver, ReentrancyGuard{
 
     /**
      * @dev allows you to remove an ERC721 from the contract, by passing the tokenId as a parameter
-     * @param _tokenId this is the identifier of the ERC721
+     * @param _tokenId is the identifier of the ERC721
      */
     function withdrawByTokenId(uint256 _tokenId) public updateReward(msg.sender) nonReentrant{
         _totalSupply = _totalSupply -1;
@@ -105,7 +105,7 @@ contract StakeNft is IERC721Receiver, ReentrancyGuard{
         emit WithdrawAll(initialTimeOfEntry[msg.sender], _totalSupply);
     }
 
-    
+    ///@dev allows you to withdraw your winnings, you must wait 1 month before
     function getReward() public nonReentrant updateReward(msg.sender) waitMonth(msg.sender){
         uint256 reward = rewards[msg.sender];
         require(reward >= 0,"You have no reward");
