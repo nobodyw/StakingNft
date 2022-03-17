@@ -137,8 +137,12 @@ contract StakeNft is IERC721Receiver, ReentrancyGuard{
             rewards[account];
     }
 
-    function balanceOf(address account) public view returns(uint){
+    function balanceOf(address account) external view returns(uint){
         return deployedToken.balanceOf(account);
+    }
+
+    function totalSupply() external view returns (uint256) {
+        return _totalSupply;
     }
 
     /* ========== MODIFIERS ========== */
